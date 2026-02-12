@@ -54,18 +54,26 @@
 				"__gap_large__",
 				"그렇게 생각했었는데...."
 			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_1-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_1-2.m4a",
+				"../music/SE/Boy_Dialogue/Boy_1-3.m4a",
+				"../music/SE/Boy_Dialogue/Boy_1-4.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, {
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
 				lines,
+				voiceClips,
 				accentLines: ["그렇게 생각했었는데...."],
 				largeGapToken: "__gap_large__"
 			});
 
-			window.StoryPage.addHint(stage, { hintDelayMs });
+			window.StoryPage.addHint(stage, { hintDelayMs, waitForPromise: readyPromise });
 			window.StoryPage.setupClickNavigation({
 				nextUrl: "StoryPage2.html",
-				hintDelayMs
+				hintDelayMs,
+				lockUntilPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

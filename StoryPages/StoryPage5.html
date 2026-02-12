@@ -54,13 +54,18 @@
 			const lines = [
 				"그러고보니 함께 놓여 있는 이 쪽지는 뭐지?"
 			];
+			const voiceClips = ["../music/SE/Boy_Dialogue/Boy_5-1.m4a"];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
-			window.StoryPage.addHint(stage, { hintDelayMs });
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
+			window.StoryPage.addHint(stage, { hintDelayMs, waitForPromise: readyPromise });
 			window.StoryPage.setupClickNavigation({
 				nextUrl: "StoryPage6.html",
-				hintDelayMs
+				hintDelayMs,
+				lockUntilPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

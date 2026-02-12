@@ -48,13 +48,21 @@
 				"",
 				"(그렇게 의자 밑을 확인해봤고, 의자 밑에는 어떤 편지가 붙어있었다.)"
 			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_7-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_7-2.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
 			window.StoryPage.setupActionButton(stage, {
 				label: "편지 확인하기",
 				targetUrl: "../QuizPages/QuizPage2.html",
-				showDelayMs: hintDelayMs
+				showDelayMs: hintDelayMs,
+				showAfterPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

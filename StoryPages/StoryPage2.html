@@ -58,13 +58,22 @@
 				"",
 				"대체 누가 나한테 초콜릿을..?"
 			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_2-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_2-2.m4a",
+				"../music/SE/Boy_Dialogue/Boy_2-3.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
-			window.StoryPage.addHint(stage, { hintDelayMs });
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
+			window.StoryPage.addHint(stage, { hintDelayMs, waitForPromise: readyPromise });
 			window.StoryPage.setupClickNavigation({
 				nextUrl: "StoryPage3.html",
-				hintDelayMs
+				hintDelayMs,
+				lockUntilPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

@@ -50,13 +50,22 @@
 				"",
 				"그래, 누가 나한테 초콜릿을 준 건지 찾아야겠어!!"
 			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_6-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_6-2.m4a",
+				"../music/SE/Boy_Dialogue/Boy_6-3.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
 			window.StoryPage.setupActionButton(stage, {
 				label: "쪽지 확인하기",
 				targetUrl: "../QuizPages/QuizPage1.html",
-				showDelayMs: hintDelayMs
+				showDelayMs: hintDelayMs,
+				showAfterPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

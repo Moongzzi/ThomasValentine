@@ -51,13 +51,18 @@
 		<script src="../scripts/story-common.js"></script>
 		<script>
 			const lines = ["(나는 편지에 적혀있던대로 놀이터로 향했다.)"];
+			const voiceClips = ["../music/SE/Boy_Dialogue/Boy_8-1.m4a"];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
-			window.StoryPage.addHint(stage, { hintDelayMs });
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
+			window.StoryPage.addHint(stage, { hintDelayMs, waitForPromise: readyPromise });
 			window.StoryPage.setupClickNavigation({
 				nextUrl: "StoryPage9.html",
-				hintDelayMs
+				hintDelayMs,
+				lockUntilPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

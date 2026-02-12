@@ -50,18 +50,25 @@
 				"",
 				"3명!"
 			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_3-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_3-2.m4a",
+				"../music/SE/Boy_Dialogue/Boy_3-3.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, {
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
 				lines,
+				voiceClips,
 				accentLines: ["3명!"],
 				accentDoubleDelay: true
 			});
 
-			window.StoryPage.addHint(stage, { hintDelayMs });
+			window.StoryPage.addHint(stage, { hintDelayMs, waitForPromise: readyPromise });
 			window.StoryPage.setupClickNavigation({
 				nextUrl: "StoryPage4.html",
-				hintDelayMs
+				hintDelayMs,
+				lockUntilPromise: readyPromise
 			});
 		</script>
 		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>

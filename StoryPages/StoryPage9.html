@@ -48,9 +48,16 @@
 				"",
 				"이제 내가 추측한 그 사람이 맞는지 이름을 불러봐야겠다.."
 			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_9-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_9-2.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
 
 			const answerRow = document.createElement("div");
 			answerRow.className = "answer-row fade-panel";
@@ -116,10 +123,10 @@
 			};
 
 			const showDelayMs = window.StoryPage.prefersReducedMotion.matches ? 0 : hintDelayMs;
-			window.setTimeout(() => {
+			Promise.all([readyPromise, new Promise((resolve) => window.setTimeout(resolve, showDelayMs))]).then(() => {
 				answerRow.classList.add("show");
 				secondaryActions.classList.add("show");
-			}, showDelayMs);
+			});
 
 			const checkAnswer = () => {
 				const value = answerField.value.trim().toLowerCase();

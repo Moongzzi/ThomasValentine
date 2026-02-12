@@ -45,10 +45,10 @@
 		<script src="../scripts/story-common.js"></script>
 		<script>
 			const lines = [
-				"자자,, 생각해보자..",
+				"잠깐 진정하고.. 자,, 생각 좀 해보자..",
 				"나한테 초콜릿을 줄만한 여자는..",
 				"",
-				"3명!"
+				"아무리봐도 3명밖에 없어!"
 			];
 			const voiceClips = [
 				"../music/SE/Boy_Dialogue/Boy_3-1.m4a",
@@ -60,8 +60,9 @@
 			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
 				lines,
 				voiceClips,
-				accentLines: ["3명!"],
-				accentDoubleDelay: true
+				accentWordsMap: {
+					"아무리봐도 3명밖에 없어!": ["3명"]
+				}
 			});
 
 			window.StoryPage.addHint(stage, { hintDelayMs, waitForPromise: readyPromise });

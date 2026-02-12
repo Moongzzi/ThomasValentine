@@ -5,6 +5,39 @@
 			window.setTimeout(resolve, Math.max(0, ms));
 		});
 
+	const escapeHtml = (value) =>
+		String(value)
+			.replaceAll("&", "&amp;")
+			.replaceAll("<", "&lt;")
+			.replaceAll(">", "&gt;")
+			.replaceAll('"', "&quot;")
+			.replaceAll("'", "&#39;");
+
+	const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+	const setLineContent = (lineElement, text, accentWords = []) => {
+		if (!Array.isArray(accentWords) || accentWords.length === 0) {
+			lineElement.textContent = text;
+			return;
+		}
+
+		const uniqueWords = Array.from(
+			new Set(accentWords.filter((word) => typeof word === "string" && word.length > 0))
+		).sort((a, b) => b.length - a.length);
+
+		if (uniqueWords.length === 0) {
+			lineElement.textContent = text;
+			return;
+		}
+
+		let rendered = escapeHtml(text);
+		uniqueWords.forEach((word) => {
+			const safePattern = new RegExp(escapeRegExp(escapeHtml(word)), "g");
+			rendered = rendered.replace(safePattern, `<span class="accent-word">${escapeHtml(word)}</span>`);
+		});
+		lineElement.innerHTML = rendered;
+	};
+
 	const clampVolume = (value) => Math.min(Math.max(value, 0), 1);
 	const getSeVolume = () => {
 		if (typeof window.getSeVolume === "function") {
@@ -116,9 +149,8 @@
 				});
 		});
 
-	const revealLineWithFade = (lineElement, text, durationMs) =>
+	const revealLineWithFade = (lineElement, durationMs) =>
 		new Promise((resolve) => {
-			lineElement.textContent = text;
 			if (prefersReducedMotion.matches) {
 				lineElement.style.opacity = "1";
 				lineElement.style.transform = "none";
@@ -147,6 +179,7 @@
 			lineDelay = 1100,
 			voiceClips = [],
 			accentLines = [],
+			accentWordsMap = {},
 			accentDoubleDelay = false,
 			largeGapToken = "__gap_large__",
 			spacerClass = "spacer",
@@ -181,7 +214,7 @@
 					const isAccent = accentLines.includes(text);
 					line.className = isAccent ? "line accent" : "line";
 					line.style.animation = "none";
-					line.textContent = "";
+					setLineContent(line, text, accentWordsMap[text] || []);
 					stage.appendChild(line);
 
 					const clipSrc = voiceClips[voiceIndex] || "";
@@ -191,12 +224,12 @@
 					const playbackTask = playVoiceAndWait(clipSrc, voiceDurationMs);
 
 					if (prefersReducedMotion.matches) {
-						line.textContent = text;
+						setLineContent(line, text, accentWordsMap[text] || []);
 						await playbackTask;
 						continue;
 					}
 
-					await Promise.all([revealLineWithFade(line, text, voiceDurationMs), playbackTask]);
+					await Promise.all([revealLineWithFade(line, voiceDurationMs), playbackTask]);
 				}
 			})();
 
@@ -231,7 +264,7 @@
 			const line = document.createElement("p");
 			const isAccent = accentLines.includes(text);
 			line.className = isAccent ? "line accent" : "line";
-			line.textContent = text;
+			setLineContent(line, text, accentWordsMap[text] || []);
 			if (!prefersReducedMotion.matches) {
 				const delay = `${index * lineDelay}ms`;
 				line.style.animationDelay =
@@ -356,12 +389,19 @@
 		});
 
 		actions.appendChild(actionButton);
-		stage.appendChild(actions);
+
+		const mountActions = () => {
+			if (!actions.isConnected) {
+				stage.appendChild(actions);
+			}
+		};
 
 		const delay = prefersReducedMotion.matches ? 0 : showDelayMs;
 		const delayTask = wait(delay);
 		const lockTask = showAfterPromise ? Promise.resolve(showAfterPromise) : Promise.resolve();
+		lockTask.then(mountActions);
 		Promise.all([delayTask, lockTask]).then(() => {
+			mountActions();
 			actionButton.classList.add("show");
 		});
 

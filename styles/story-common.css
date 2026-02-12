@@ -122,6 +122,11 @@ body.fade-out {
 	animation: fadeIn 0.9s ease forwards;
 }
 
+.line .accent-word {
+	color: var(--story-accent, var(--story));
+	font-weight: 700;
+}
+
 .spacer {
 	height: 18px;
 }

@@ -60,9 +60,16 @@
 				"",
 				"여기까지 온거면 오빠도 같은 마음인거죠?"
 			];
+			const voiceClips = [
+				"../music/SE/Girl_Dialogue/Girl_ending_01.m4a",
+				"../music/SE/Girl_Dialogue/Girl_ending_02.m4a"
+			];
 
 			const stage = document.getElementById("stage");
-			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
+			const { hintDelayMs } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
 			const heartOverlay = document.getElementById("heart-overlay");
 			const pulseBg = document.getElementById("pulse-bg");
 

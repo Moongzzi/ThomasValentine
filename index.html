@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Valentine</title>
+		<style>
+			:root {
+				--bg-top: #fff2f7;
+				--bg-bottom: #fde7f0;
+				--text: #6b1e2f;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: radial-gradient(120% 120% at 50% 0%, var(--bg-top), var(--bg-bottom));
+				color: var(--text);
+				font-family: "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+				cursor: pointer;
+				opacity: 1;
+				transition: opacity 0.45s ease;
+			}
+
+			body.fade-out {
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			.star-button-wrap {
+				position: fixed;
+				top: 12px;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 12;
+			}
+
+			.star-button {
+				width: 44px;
+				height: 44px;
+				border-radius: 999px;
+				border: 1px solid rgba(107, 30, 47, 0.2);
+				background: rgba(255, 255, 255, 0.86);
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				box-shadow: 0 10px 20px rgba(107, 30, 47, 0.16);
+			}
+
+			.star-button svg {
+				width: 20px;
+				height: 20px;
+				fill: #b0283a;
+			}
+
+			.star-button:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 12px 22px rgba(107, 30, 47, 0.2);
+			}
+
+			.star-modal {
+				position: fixed;
+				inset: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: rgba(24, 10, 16, 0.65);
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.25s ease;
+				z-index: 20;
+			}
+
+			.star-modal.show {
+				opacity: 1;
+				pointer-events: auto;
+			}
+
+			.star-modal-card {
+				width: min(90vw, 520px);
+				background: rgba(255, 255, 255, 0.95);
+				border-radius: 20px;
+				padding: 22px 24px;
+				box-shadow: 0 18px 40px rgba(24, 10, 16, 0.22);
+				text-align: left;
+				max-height: min(72vh, 520px);
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			}
+
+			.star-modal-grid {
+				display: grid;
+				gap: 14px;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				overflow-y: auto;
+				padding-right: 4px;
+				flex: 1;
+			}
+
+			.star-profile-card {
+				background: rgba(252, 236, 242, 0.9);
+				border: 1px solid rgba(107, 30, 47, 0.12);
+				border-radius: 16px;
+				padding: 12px;
+				display: grid;
+				gap: 10px;
+			}
+
+			.star-profile-header {
+				display: grid;
+				grid-template-columns: 96px 1fr;
+				gap: 10px;
+				align-items: center;
+			}
+
+			.star-profile-image {
+				width: 96px;
+				height: 128px;
+				object-fit: cover;
+				border-radius: 12px;
+				box-shadow: 0 8px 18px rgba(58, 29, 36, 0.18);
+			}
+
+			.star-profile-name {
+				margin: 0 0 4px;
+				font-weight: 700;
+				color: #b0283a;
+			}
+
+			.star-profile-meta {
+				margin: 0;
+				font-size: 0.9rem;
+				color: #6b1e2f;
+			}
+
+			.star-profile-role {
+				font-size: 0.85rem;
+				color: rgba(107, 30, 47, 0.8);
+			}
+
+			.star-voice-button {
+				width: 100%;
+				padding: 8px 12px;
+				border-radius: 999px;
+				border: 1px solid rgba(107, 30, 47, 0.2);
+				background: #fff;
+				color: #6b1e2f;
+				font-weight: 600;
+				cursor: pointer;
+			}
+
+			@media (max-width: 600px) {
+				.star-modal-card {
+					padding: 18px 16px;
+					max-height: 78vh;
+				}
+				.star-modal-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			.star-modal-title {
+				margin: 0 0 12px;
+				font-size: 1.2rem;
+				letter-spacing: 0.06em;
+				color: #6b1e2f;
+			}
+
+			.star-modal-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				display: grid;
+				gap: 10px;
+			}
+
+			.star-modal-item {
+				padding: 10px 12px;
+				border-radius: 14px;
+				background: rgba(252, 236, 242, 0.9);
+				border: 1px solid rgba(107, 30, 47, 0.12);
+			}
+
+			.star-modal-name {
+				font-weight: 700;
+				color: #b0283a;
+			}
+
+			.star-modal-close {
+				margin-top: 14px;
+				width: 100%;
+				padding: 10px 14px;
+				border-radius: 999px;
+				border: 1px solid rgba(107, 30, 47, 0.2);
+				background: #fff;
+				color: #6b1e2f;
+				font-weight: 600;
+				cursor: pointer;
+				flex-shrink: 0;
+			}
+
+			.corner-logo {
+				position: fixed;
+				top: 0;
+				left: 40px;
+				width: clamp(192px, 44vw, 320px);
+				height: auto;
+				filter: drop-shadow(0 10px 18px rgba(107, 30, 47, 0.2));
+				pointer-events: none;
+				z-index: 11;
+				display: none;
+			}
+
+			@media (min-width: 1024px) {
+				.corner-logo {
+					left: 56px;
+				}
+			}
+
+			@media (max-width: 600px) {
+				.corner-logo {
+					width: clamp(120px, 38vw, 200px);
+				}
+			}
+
+
+			.hero {
+				text-align: center;
+				padding: 24px;
+			}
+
+			.logo {
+				width: min(85vw, 720px);
+				height: auto;
+				animation: heartbeat 1.6s ease-in-out infinite;
+				transform-origin: center;
+				filter: drop-shadow(0 12px 24px rgba(107, 30, 47, 0.22));
+			}
+
+			.cta {
+				margin-top: 20px;
+				font-size: 1.05rem;
+				letter-spacing: 0.03em;
+			}
+
+			.cta-text {
+				display: inline-block;
+				animation: ctaBlink 1.3s ease-in-out infinite;
+			}
+
+			.cta-bracket {
+				display: inline-block;
+				font-weight: 700;
+			}
+
+			.cta-bracket.left {
+				animation: bracketWiggleLeft 1.2s ease-in-out infinite;
+			}
+
+			.cta-bracket.right {
+				animation: bracketWiggleRight 1.2s ease-in-out infinite;
+			}
+
+			@keyframes bracketWiggleLeft {
+				0%,
+				100% {
+					transform: translateX(0);
+					opacity: 0.7;
+				}
+				50% {
+					transform: translateX(4px);
+					opacity: 1;
+				}
+			}
+
+			@keyframes bracketWiggleRight {
+				0%,
+				100% {
+					transform: translateX(0);
+					opacity: 0.7;
+				}
+				50% {
+					transform: translateX(-4px);
+					opacity: 1;
+				}
+			}
+
+			@keyframes heartbeat {
+				0% {
+					transform: scale(1);
+				}
+				10% {
+					transform: scale(1.05);
+				}
+				20% {
+					transform: scale(1);
+				}
+				30% {
+					transform: scale(1.08);
+				}
+				45% {
+					transform: scale(1);
+				}
+				100% {
+					transform: scale(1);
+				}
+			}
+
+			@keyframes ctaBlink {
+				0%,
+				100% {
+					opacity: 0.55;
+				}
+				50% {
+					opacity: 1;
+				}
+			}
+
+			@media (prefers-reduced-motion: reduce) {
+				.logo {
+					animation: none;
+				}
+				.cta-text {
+					animation: none;
+				}
+			}
+
+			@media (max-width: 600px) {
+				body {
+					padding-top: 0;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<img class="corner-logo" src="images/ValentineLogo.png" alt="Valentine logo" />
+		<div class="star-button-wrap">
+			<button class="star-button" type="button" aria-label="등장인물 소개">
+				<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+					<path
+						d="M12 2.4 14.7 8l6.2.9-4.5 4.4 1.1 6.2L12 16.9l-5.5 2.6 1.1-6.2-4.5-4.4L9.3 8 12 2.4z"
+					/>
+				</svg>
+			</button>
+		</div>
+		<main class="hero">
+			<img class="logo" src="images/ValentineLogo.png" alt="Valentine logo" />
+			<div class="cta">
+				<span class="cta-bracket left">&gt;&gt;</span>
+				<span class="cta-text">시작하려면 클릭하세요</span>
+				<span class="cta-bracket right">&lt;&lt;</span>
+            </div>
+		</main>
+		<div class="star-modal" id="star-modal" aria-hidden="true">
+			<div class="star-modal-card" role="dialog" aria-modal="true" aria-label="등장인물 소개">
+				<h2 class="star-modal-title">등장인물 소개</h2>
+				<div class="star-modal-grid">
+					<article class="star-profile-card">
+						<div class="star-profile-header">
+							<img
+								class="star-profile-image"
+								src="images/BoyProfile.png"
+								alt="박준호 프로필"
+							/>
+							<div>
+								<p class="star-profile-name">박준호</p>
+								<p class="star-profile-meta">성우: 타니</p>
+								<p class="star-profile-role">남주인공</p>
+							</div>
+						</div>
+						<button
+							class="star-voice-button"
+							type="button"
+							data-audio-src="music/SE/SelfProduce/Boy_ParkJunHo_intro.mp3"
+						>
+							성우 자기소개 듣기
+						</button>
+					</article>
+					<article class="star-profile-card">
+						<div class="star-profile-header">
+							<img
+								class="star-profile-image"
+								src="images/GirlProfile_ok.png"
+								alt="김옥찌 프로필"
+							/>
+							<div>
+								<p class="star-profile-name">김옥찌</p>
+								<p class="star-profile-meta">성우: 단편선</p>
+								<p class="star-profile-role">친한 여동생</p>
+							</div>
+						</div>
+						<button
+							class="star-voice-button"
+							type="button"
+							data-audio-src="music/SE/SelfProduce/Girl_ok_intro.mp3"
+						>
+							성우 자기소개 듣기
+						</button>
+					</article>
+					<article class="star-profile-card">
+						<div class="star-profile-header">
+							<img
+								class="star-profile-image"
+								src="images/GirlProfile_wal.png"
+								alt="무왈랑 프로필"
+							/>
+							<div>
+								<p class="star-profile-name">무왈랑</p>
+								<p class="star-profile-meta">성우: 왈랭</p>
+								<p class="star-profile-role">소꿉친구</p>
+							</div>
+						</div>
+						<button
+							class="star-voice-button"
+							type="button"
+							data-audio-src="music/SE/SelfProduce/Girl_wal_intro.mp3"
+						>
+							성우 자기소개 듣기
+						</button>
+					</article>
+					<article class="star-profile-card">
+						<div class="star-profile-header">
+							<img
+								class="star-profile-image"
+								src="images/GirlProfile_lyn.png"
+								alt="오린스 프로필"
+							/>
+							<div>
+								<p class="star-profile-name">오린스</p>
+								<p class="star-profile-meta">성우: 두부</p>
+								<p class="star-profile-role">친동생처럼 챙겨주는 누나</p>
+							</div>
+						</div>
+						<button
+							class="star-voice-button"
+							type="button"
+							data-audio-src="music/SE/SelfProduce/Girl_lyn_intro.mp3"
+						>
+							성우 자기소개 듣기
+						</button>
+					</article>
+				</div>
+				<button class="star-modal-close" type="button">닫기</button>
+			</div>
+		</div>
+		<script>
+			const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+			const fadeDurationMs = 450;
+			let isNavigating = false;
+			const starButton = document.querySelector(".star-button");
+			const starModal = document.getElementById("star-modal");
+			const starModalCard = document.querySelector(".star-modal-card");
+			const starModalClose = document.querySelector(".star-modal-close");
+			const starVoiceButtons = Array.from(document.querySelectorAll(".star-voice-button"));
+			let activeIntroAudio = null;
+
+			const openStarModal = () => {
+				starModal.classList.add("show");
+				starModal.setAttribute("aria-hidden", "false");
+			};
+
+			const closeStarModal = () => {
+				starModal.classList.remove("show");
+				starModal.setAttribute("aria-hidden", "true");
+				if (activeIntroAudio) {
+					activeIntroAudio.pause();
+					activeIntroAudio.currentTime = 0;
+					activeIntroAudio = null;
+				}
+			};
+
+			starButton.addEventListener("click", (event) => {
+				event.stopPropagation();
+				openStarModal();
+			});
+
+			starModal.addEventListener("click", () => {
+				closeStarModal();
+			});
+
+			starModalCard.addEventListener("click", (event) => {
+				event.stopPropagation();
+			});
+
+			starModalClose.addEventListener("click", (event) => {
+				event.stopPropagation();
+				closeStarModal();
+			});
+
+			starVoiceButtons.forEach((button) => {
+				button.addEventListener("click", (event) => {
+					event.stopPropagation();
+					const src = button.dataset.audioSrc;
+					if (!src) {
+						return;
+					}
+					if (activeIntroAudio) {
+						activeIntroAudio.pause();
+						activeIntroAudio.currentTime = 0;
+					}
+					activeIntroAudio = new Audio(src);
+					activeIntroAudio.volume = 0.8;
+					activeIntroAudio.play().catch(() => {
+						return;
+					});
+				});
+			});
+
+			document.addEventListener("keydown", (event) => {
+				if (event.key === "Escape") {
+					closeStarModal();
+				}
+			});
+
+			document.addEventListener("click", () => {
+				if (starModal.classList.contains("show")) {
+					return;
+				}
+				if (isNavigating) {
+					return;
+				}
+
+				isNavigating = true;
+				localStorage.setItem("bgm-time", "0");
+				document.body.classList.add("fade-out");
+
+				const delay = prefersReducedMotion.matches ? 0 : fadeDurationMs;
+				window.setTimeout(() => {
+					window.location.href = "Loading.html";
+				}, delay);
+			});
+		</script>
+	</body>
+</html>

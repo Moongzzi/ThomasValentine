@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Valentine Story 8</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="../styles/story-common.css" />
+		<link rel="stylesheet" href="../styles/story-page8.css" />
+	</head>
+	<body>
+		<img class="corner-logo" src="../images/ValentineLogo.png" alt="Valentine logo" />
+		<div class="bgm-control">
+			<div class="bgm-row">
+				<span class="bgm-label">BGM</span>
+				<input
+					id="bgm-volume"
+					type="range"
+					min="0"
+					max="1"
+					step="0.01"
+					aria-label="배경음악 볼륨"
+				/>
+			</div>
+			<div class="bgm-row">
+				<span class="bgm-label">SE</span>
+				<input
+					id="se-volume"
+					type="range"
+					min="0"
+					max="1"
+					step="0.01"
+					aria-label="효과음 볼륨"
+				/>
+			</div>
+		</div>
+		<div class="page-number" aria-label="페이지 8/9">8 / 9</div>
+		<main class="stage">
+			<img
+				class="story-image"
+				src="../images/ValentineImage3.png"
+				alt="Valentine park"
+			/>
+			<div id="stage" aria-live="polite"></div>
+		</main>
+		<script src="../scripts/story-common.js"></script>
+		<script>
+			const lines = ["(나는 편지에 적혀있던대로 놀이터로 향했다.)"];
+
+			const stage = document.getElementById("stage");
+			const { hintDelayMs } = window.StoryPage.renderLines(stage, { lines });
+			window.StoryPage.addHint(stage, { hintDelayMs });
+			window.StoryPage.setupClickNavigation({
+				nextUrl: "StoryPage9.html",
+				hintDelayMs
+			});
+		</script>
+		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>
+	</body>
+</html>

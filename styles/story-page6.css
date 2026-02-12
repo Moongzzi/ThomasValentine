@@ -1,0 +1,62 @@
+:root {
+	--bg-top: #fff8fb;
+	--bg-bottom: #f7e7ee;
+	--story: #3a1d24;
+	--button-bg: #d52a4a;
+	--button-bg-hover: #b3223d;
+	--button-border: #f3a1b3;
+	--button-text: #fff9fb;
+}
+
+#bgm-volume {
+	accent-color: var(--button-bg);
+}
+
+.actions {
+	margin-top: 34px;
+	display: flex;
+	justify-content: center;
+}
+
+.action-button {
+	font-family: "Noto Sans KR", "Segoe UI", sans-serif;
+	font-size: 1rem;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	padding: 12px 34px;
+	border: 1px solid var(--button-border);
+	border-radius: 999px;
+	background: linear-gradient(135deg, #f46b8a 0%, var(--button-bg) 60%, #b01935 100%);
+	color: var(--button-text);
+	box-shadow: 0 16px 30px rgba(213, 42, 74, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+	cursor: pointer;
+	opacity: 0;
+	transform: translateY(10px) scale(0.98);
+	transition: transform 0.25s ease, background 0.2s ease, box-shadow 0.2s ease,
+		opacity 0.25s ease;
+}
+
+.action-button::before {
+	content: "";
+	position: absolute;
+	inset: 2px 6px auto 6px;
+	height: 45%;
+	border-radius: 999px;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+	pointer-events: none;
+}
+
+.action-button:hover {
+	background: var(--button-bg-hover);
+	transform: translateY(-2px) scale(1);
+	box-shadow: 0 18px 34px rgba(213, 42, 74, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+.action-button:active {
+	transform: translateY(0) scale(0.99);
+}
+
+.action-button.show {
+	opacity: 1;
+	transform: translateY(0) scale(1);
+}

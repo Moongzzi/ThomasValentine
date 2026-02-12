@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Valentine Loading</title>
+		<style>
+			:root {
+				--bg-top: #fff2f7;
+				--bg-bottom: #fde7f0;
+				--text: #6b1e2f;
+				--muted: #8d3b4c;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				margin: 0;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: radial-gradient(120% 120% at 50% 0%, var(--bg-top), var(--bg-bottom));
+				color: var(--text);
+				font-family: "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+				padding: 40px 20px;
+			}
+
+			.corner-logo {
+				position: fixed;
+				top: 0;
+				left: 40px;
+				width: clamp(192px, 44vw, 320px);
+				height: auto;
+				filter: drop-shadow(0 10px 18px rgba(107, 30, 47, 0.2));
+				pointer-events: none;
+				z-index: 11;
+			}
+
+			@media (min-width: 1024px) {
+				.corner-logo {
+					left: 56px;
+				}
+			}
+
+			@media (max-width: 600px) {
+				.corner-logo {
+					width: clamp(120px, 38vw, 200px);
+				}
+			}
+
+			.panel {
+				text-align: center;
+				width: min(90vw, 520px);
+			}
+
+			.loading-image {
+				width: min(80vw, 280px);
+				height: auto;
+				margin-bottom: 18px;
+				filter: drop-shadow(0 14px 26px rgba(107, 30, 47, 0.2));
+			}
+
+			.loading-text {
+				font-size: clamp(1rem, 2.4vw, 1.2rem);
+				line-height: 1.8;
+				letter-spacing: 0.02em;
+			}
+
+			.loading-percent {
+				margin-left: 10px;
+				font-weight: 700;
+				color: var(--muted);
+			}
+
+			@media (max-width: 600px) {
+				body {
+					padding-top: clamp(160px, 30vw, 220px);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<img class="corner-logo" src="images/ValentineLogo.png" alt="Valentine logo" />
+		<main class="panel">
+			<img
+				class="loading-image"
+				src="images/ValentineLoading.gif"
+				alt="Loading"
+			/>
+			<div class="loading-text">
+				등교 준비 중.. 아침 먹고.. 교복 입고... 눈 비비는 중...
+				<span class="loading-percent" id="loading-percent">0%</span>
+			</div>
+		</main>
+		<script>
+			const percentEl = document.getElementById("loading-percent");
+			const totalDurationMs = 7000;
+			const tickMs = 80;
+			const startTime = Date.now();
+			let displayPercent = 0;
+			let stallCount = 0;
+			const maxStall = 2;
+
+			const tick = () => {
+				const elapsed = Date.now() - startTime;
+				const targetPercent = Math.min(Math.round((elapsed / totalDurationMs) * 100), 100);
+				const shouldStall = Math.random() < 0.28 && stallCount < maxStall;
+				if (shouldStall) {
+					stallCount += 1;
+				} else {
+					stallCount = 0;
+					const step = Math.floor(Math.random() * 5) + 2;
+					displayPercent = Math.min(displayPercent + step, targetPercent);
+				}
+
+				percentEl.textContent = `${displayPercent}%`;
+				if (elapsed >= totalDurationMs) {
+					percentEl.textContent = "100%";
+					return;
+				}
+				window.setTimeout(tick, tickMs);
+			};
+
+			window.setTimeout(tick, tickMs);
+
+			window.setTimeout(() => {
+				window.location.href = "StoryPages/StoryPage1.html";
+			}, totalDurationMs);
+		</script>
+	</body>
+</html>

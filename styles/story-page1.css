@@ -1,0 +1,11 @@
+:root {
+	--bg-top: #fff8fb;
+	--bg-bottom: #f7e7ee;
+	--story: #3a1d24;
+	--story-accent: #b0283a;
+	--hint: #7c2a3c;
+}
+
+.line.accent {
+	color: var(--story-accent);
+}

@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Valentine Story 4</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="../styles/story-common.css" />
+		<link rel="stylesheet" href="../styles/story-page4.css" />
+	</head>
+	<body>
+		<img class="corner-logo" src="../images/ValentineLogo.png" alt="Valentine logo" />
+		<div class="bgm-control">
+			<div class="bgm-row">
+				<span class="bgm-label">BGM</span>
+				<input
+					id="bgm-volume"
+					type="range"
+					min="0"
+					max="1"
+					step="0.01"
+					aria-label="배경음악 볼륨"
+				/>
+			</div>
+			<div class="bgm-row">
+				<span class="bgm-label">SE</span>
+				<input
+					id="se-volume"
+					type="range"
+					min="0"
+					max="1"
+					step="0.01"
+					aria-label="효과음 볼륨"
+				/>
+			</div>
+		</div>
+		<div class="page-number" aria-label="페이지 4/9">4 / 9</div>
+		<main class="stage" id="stage" aria-live="polite">
+			<section class="profile-list">
+				<article class="profile-card">
+					<img
+						class="profile-image"
+						src="../images/GirlProfile_ok.png"
+						alt="GirlProfile ok"
+					/>
+					<div class="profile-body">
+						<p class="profile-name">김옥찌</p>
+						<p class="profile-meta">내가 아끼는 친한 여동생</p>
+						<p class="profile-desc">
+							내 눈에는 그저 귀엽고 애같아 보이지만,<br>
+							똑부러진 면모가 있다.
+						</p>
+					</div>
+					<div class="voice-buttons">
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_ok_01.m4a">
+							Vc 01
+						</button>
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_ok_02.m4a">
+							Vc 02
+						</button>
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_ok_03.m4a">
+							Vc 03
+						</button>
+					</div>
+				</article>
+				<article class="profile-card">
+					<img
+						class="profile-image"
+						src="../images/GirlProfile_wal.png"
+						alt="GirlProfile wal"
+					/>
+					<div class="profile-body">
+						<p class="profile-name">무왈랑</p>
+						<p class="profile-meta">3살부터 친했던 소꿉친구</p>
+						<p class="profile-desc">
+							애교가 많고 가끔 맹하다. <br>
+							엄청 덤벙거리지만 매번 나를 챙긴다.
+						</p>
+					</div>
+					<div class="voice-buttons">
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_wal_01.m4a">
+							Vc 01
+						</button>
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_wal_02.m4a">
+							Vc 02
+						</button>
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_wal_03.m4a">
+							Vc 03
+						</button>
+					</div>
+				</article>
+				<article class="profile-card">
+					<img
+						class="profile-image"
+						src="../images/GirlProfile_lyn.png"
+						alt="GirlProfile lyn"
+					/>
+					<div class="profile-body">
+						<p class="profile-name">오린스</p>
+						<p class="profile-meta">나를 친동생처럼 챙겨주는 누나</p>
+						<p class="profile-desc">
+							차분한 성격에 공부도 잘한다고 들었다.<br>
+							흔히 말하는 엄친딸이랄까
+						</p>
+					</div>
+					<div class="voice-buttons">
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_lyn_01.m4a">
+							Vc 01
+						</button>
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_lyn_02.m4a">
+							Vc 02
+						</button>
+						<button class="voice-button" type="button" data-audio-src="../music/SE/Girl_Dialogue/Girl_lyn_03.m4a">
+							Vc 03
+						</button>
+					</div>
+				</article>
+			</section>
+		</main>
+		<script src="../scripts/story-common.js"></script>
+		<script>
+			const stage = document.getElementById("stage");
+			const hintDelayMs = window.StoryPage.prefersReducedMotion.matches ? 0 : 400;
+			window.StoryPage.addHint(stage, { hintDelayMs });
+			window.StoryPage.setupClickNavigation({
+				nextUrl: "Simulation.html",
+				hintDelayMs
+			});
+
+			const prefersReducedMotion = window.StoryPage.prefersReducedMotion.matches;
+
+			const profileCards = Array.from(document.querySelectorAll(".profile-card"));
+			if (!prefersReducedMotion && profileCards.length) {
+				const revealDelays = [600, 1600, 2600];
+				profileCards.forEach((card, index) => {
+					const delay = revealDelays[index] || revealDelays[revealDelays.length - 1];
+					window.setTimeout(() => {
+						card.scrollIntoView({ behavior: "smooth", block: "center" });
+					}, delay);
+				});
+			}
+			const voiceButtons = Array.from(document.querySelectorAll(".voice-button"));
+			let activeAudio = null;
+			const getSeVolume = () => {
+				if (typeof window.getSeVolume === "function") {
+					return window.getSeVolume();
+				}
+				const stored = parseFloat(localStorage.getItem("se-volume"));
+				return Number.isFinite(stored) ? Math.min(Math.max(stored, 0), 1) : 0.7;
+			};
+
+			const activateCard = (card) => {
+				profileCards.forEach((item) => {
+					item.classList.toggle("active", item === card);
+				});
+			};
+
+			window.addEventListener("se-volume-change", (event) => {
+				const volume = event?.detail?.volume;
+				if (activeAudio && Number.isFinite(volume)) {
+					activeAudio.volume = volume;
+				}
+			});
+
+			const playVoice = (button) => {
+				const src = button.dataset.audioSrc;
+				if (!src) {
+					return;
+				}
+				if (activeAudio) {
+					activeAudio.pause();
+					activeAudio.currentTime = 0;
+				}
+				activeAudio = new Audio(src);
+				window.__activeSeAudio = activeAudio;
+				activeAudio.volume = getSeVolume();
+				activeAudio.play().catch(() => {
+					return;
+				});
+			};
+
+			voiceButtons.forEach((button) => {
+				button.addEventListener("click", (event) => {
+					event.stopPropagation();
+					const card = button.closest(".profile-card");
+					if (card) {
+						activateCard(card);
+					}
+					playVoice(button);
+				});
+			});
+
+			profileCards.forEach((card) => {
+				card.addEventListener("click", (event) => {
+					event.stopPropagation();
+					activateCard(card);
+				});
+				card.addEventListener("keydown", (event) => {
+					if (event.key === "Enter" || event.key === " ") {
+						event.preventDefault();
+						activateCard(card);
+					}
+				});
+			});
+		</script>
+		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>
+	</body>
+</html>

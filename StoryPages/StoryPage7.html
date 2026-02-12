@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Valentine Story 7</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Noto+Sans+KR:wght@400;600&display=swap"
+			rel="stylesheet"
+		/>
+		<link rel="stylesheet" href="../styles/story-common.css" />
+		<link rel="stylesheet" href="../styles/story-page7.css" />
+	</head>
+	<body>
+		<img class="corner-logo" src="../images/ValentineLogo.png" alt="Valentine logo" />
+		<div class="bgm-control">
+			<div class="bgm-row">
+				<span class="bgm-label">BGM</span>
+				<input
+					id="bgm-volume"
+					type="range"
+					min="0"
+					max="1"
+					step="0.01"
+					aria-label="배경음악 볼륨"
+				/>
+			</div>
+			<div class="bgm-row">
+				<span class="bgm-label">SE</span>
+				<input
+					id="se-volume"
+					type="range"
+					min="0"
+					max="1"
+					step="0.01"
+					aria-label="효과음 볼륨"
+				/>
+			</div>
+		</div>
+		<div class="page-number" aria-label="페이지 7/9">7 / 9</div>
+		<main class="stage" id="stage" aria-live="polite"></main>
+		<script src="../scripts/story-common.js"></script>
+		<script>
+			const lines = [
+				"어디.. '의..자.. 의자 밑..?' 의자 밑을 보라는건가..",
+				"",
+				"(나는 그렇게 의자 밑을 확인해봤고, 의자 밑에는 어떤 편지가 하나 붙어있었다.)"
+			];
+			const voiceClips = [
+				"../music/SE/Boy_Dialogue/Boy_7-1.m4a",
+				"../music/SE/Boy_Dialogue/Boy_7-2.m4a"
+			];
+
+			const stage = document.getElementById("stage");
+			const { hintDelayMs, readyPromise } = window.StoryPage.renderLines(stage, {
+				lines,
+				voiceClips
+			});
+			window.StoryPage.setupActionButton(stage, {
+				label: "편지 확인하기",
+				targetUrl: "../QuizPages/NextQuiz.html",
+				showDelayMs: hintDelayMs,
+				showAfterPromise: readyPromise
+			});
+		</script>
+		<script src="../scripts/bgm.js" data-bgm-src="../music/BGM/BackgroundMusic.mp3"></script>
+	</body>
+</html>
